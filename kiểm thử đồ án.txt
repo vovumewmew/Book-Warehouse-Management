@@ -1,0 +1,160 @@
+==================================================================
+      KẾ HOẠCH KIỂM THỬ (TEST PLAN) - ĐỒ ÁN QUẢN LÝ KHO SÁCH
+==================================================================
+
+Chào bạn,
+
+Cảm ơn bạn đã giúp mình kiểm thử đồ án này. Dưới đây là các hạng mục cần kiểm tra để đảm bảo tất cả các chức năng hoạt động đúng như mong đợi.
+
+Khi phát hiện lỗi, bạn vui lòng ghi lại các thông tin sau:
+- Chức năng bị lỗi (ví dụ: Thêm sách, Xóa phiếu nhập).
+- Các bước để tái hiện lại lỗi.
+- Lỗi hiển thị ra sao (ví dụ: chương trình bị crash, hiện thông báo lỗi màu hồng, không có gì xảy ra).
+
+Chúc bạn test vui!
+
+------------------------------------------------------------------
+PHẦN 1: KIỂM THỬ CÁC CHỨC NĂNG QUẢN LÝ (CRUD)
+------------------------------------------------------------------
+
+Đối với mỗi đối tượng (Sách, Nhân viên, Nhà cung cấp, Nhà phân phối), bạn hãy thực hiện các bài test sau:
+
+**1.1. Chức năng "Thêm mới":**
+   - **Test thành công (Happy Path):**
+     + Nhấn nút "Thêm mới".
+     + Điền đầy đủ và hợp lệ TẤT CẢ các thông tin.
+     + Nhấn "Lưu".
+     => Mong đợi: Form tự đóng, đối tượng mới xuất hiện trong danh sách.
+
+   - **Test lỗi bỏ trống thông tin:**
+     + Nhấn nút "Thêm mới".
+     + Cố tình để trống một vài ô (đặc biệt là Mã, Tên).
+     + Nhấn "Lưu".
+     => Mong đợi: Form không đóng, hiển thị thông báo lỗi màu đỏ ngay dưới ô bị bỏ trống.
+
+   - **Test lỗi trùng "Mã":**
+     + Xem một mã đã có sẵn trong danh sách (ví dụ: S01).
+     + Nhấn "Thêm mới" và nhập lại chính xác mã đó.
+     + Điền các thông tin còn lại.
+     + Nhấn "Lưu".
+     => Mong đợi: Form không đóng, một hộp thoại lỗi màu hồng hiện ra ở giữa màn hình báo "Lỗi Trùng Lặp".
+
+   - **Test lỗi định dạng dữ liệu (nếu có):**
+     + Với Nhân viên: Nhập số điện thoại/email sai định dạng.
+     + Với Sách: Nhập chữ vào ô "Số lượng" hoặc "Giá".
+     => Mong đợi: Hiển thị thông báo lỗi tương ứng.
+
+**1.2. Chức năng "Xem" và "Sửa":**
+   - **Xem chi tiết:**
+     + Nhấp vào một thẻ (card) bất kỳ trong danh sách.
+     => Mong đợi: Form chi tiết hiện ra, hiển thị ĐÚNG thông tin của đối tượng đó.
+
+   - **Sửa thành công:**
+     + Mở form chi tiết, nhấn nút "Sửa".
+     + Thay đổi một vài thông tin (ví dụ: Tên, Tác giả, Địa chỉ...).
+     + Nhấn "Lưu".
+     => Mong đợi: Form tự đóng, thông tin của đối tượng trong danh sách được cập nhật.
+
+   - **Sửa nhưng không lưu:**
+     + Mở form chi tiết, nhấn nút "Sửa".
+     + Thay đổi thông tin, sau đó nhấn "Hủy" hoặc nút "Đóng".
+     => Mong đợi: Form đóng, thông tin của đối tượng KHÔNG thay đổi.
+
+**1.3. Chức năng "Xóa" (chuyển vào thùng rác):**
+   - Mở form chi tiết của một đối tượng.
+   - Nhấn nút "Xóa".
+   - Một hộp thoại xác nhận màu tím hiện ra, nhấn "Xác nhận".
+   => Mong đợi: Form tự đóng, đối tượng đó biến mất khỏi danh sách hiện tại.
+
+**1.4. Chức năng "Tìm kiếm":**
+   - Gõ một phần tên của đối tượng vào thanh tìm kiếm và nhấn Enter (hoặc nút kính lúp).
+   => Mong đợi: Danh sách chỉ hiển thị các kết quả khớp với từ khóa.
+   - Xóa trắng thanh tìm kiếm và nhấn Enter.
+   => Mong đợi: Danh sách hiển thị lại đầy đủ như ban đầu.
+
+------------------------------------------------------------------
+PHẦN 2: KIỂM THỬ CHỨC NĂNG "THÙNG RÁC"
+------------------------------------------------------------------
+
+Đối với mỗi đối tượng (Sách, Nhân viên, Nhà cung cấp, Nhà phân phối):
+
+**2.1. Chức năng "Phục hồi":**
+   - Vào trang quản lý chính (ví dụ: trang Sách).
+   - Nhấn vào biểu tượng thùng rác ở góc trên bên phải để vào trang "đã xóa".
+   - Nhấp vào một đối tượng đã bị xóa.
+   - Trong form chi tiết, nhấn nút "Phục hồi".
+   - Hộp thoại xác nhận màu tím hiện ra, nhấn "Xác nhận".
+   => Mong đợi: Form đóng, đối tượng biến mất khỏi trang "đã xóa" và xuất hiện trở lại ở trang quản lý chính.
+
+**2.2. Chức năng "Xóa vĩnh viễn":**
+   - Tương tự như trên, vào trang "đã xóa".
+   - Nhấp vào một đối tượng.
+   - Nhấn nút "Xóa vĩnh viễn".
+   - Hộp thoại xác nhận màu tím hiện ra, nhấn "Xác nhận".
+   => Mong đợi: Form đóng, đối tượng biến mất vĩnh viễn khỏi trang "đã xóa".
+
+------------------------------------------------------------------
+PHẦN 3: KIỂM THỬ CHỨC NĂNG "PHIẾU NHẬP/XUẤT" (PHỨC TẠP)
+------------------------------------------------------------------
+
+**3.1. Chức năng "Thêm Phiếu Nhập":**
+   - **Test thành công:**
+     + Ghi lại số lượng tồn kho của một vài cuốn sách (ví dụ: Sách A có 10 cuốn).
+     + Nhấn "Thêm Phiếu Nhập", điền đầy đủ thông tin (Mã phiếu, Ngày, NV, Nguồn nhập).
+     + Ở phần chi tiết, chọn Sách A và nhập số lượng là 5.
+     + Nhấn "Lưu".
+     => Mong đợi: Phiếu nhập mới được tạo. Quay lại trang Sách, kiểm tra số lượng tồn kho của Sách A phải tăng lên 15.
+
+   - **Test lỗi trùng mã phiếu:**
+     + Thử tạo phiếu nhập với mã đã tồn tại.
+     => Mong đợi: Hộp thoại lỗi màu hồng báo "Lỗi Trùng Lặp" hiện ra.
+
+   - **Test lỗi không có chi tiết:**
+     + Điền thông tin phiếu nhưng không thêm dòng chi tiết nào.
+     + Nhấn "Lưu".
+     => Mong đợi: Hiện thông báo lỗi yêu cầu thêm chi tiết.
+
+**3.2. Chức năng "Thêm Phiếu Xuất":**
+   - **Test thành công:**
+     + Ghi lại số lượng tồn kho của một vài cuốn sách (ví dụ: Sách B có 20 cuốn).
+     + Nhấn "Thêm Phiếu Xuất", điền đầy đủ thông tin.
+     + Ở phần chi tiết, chọn Sách B và nhập số lượng là 8.
+     + Nhấn "Lưu".
+     => Mong đợi: Phiếu xuất mới được tạo. Quay lại trang Sách, kiểm tra số lượng tồn kho của Sách B phải giảm xuống còn 12.
+
+   - **Test lỗi xuất quá tồn kho:**
+     + Ghi lại số lượng tồn kho của Sách B là 12.
+     + Tạo phiếu xuất mới, chọn Sách B và nhập số lượng là 15 (lớn hơn 12).
+     => Mong đợi: Ô nhập số lượng hiển thị lỗi "Vượt tồn kho" và không cho phép lưu.
+
+**3.3. Chức năng "Xóa Phiếu Nhập":**
+   - **Test thành công:**
+     + Ghi lại số lượng tồn kho của Sách C là 30.
+     + Tìm một phiếu nhập đã từng nhập Sách C với số lượng là 10.
+     + Mở chi tiết phiếu nhập đó và nhấn "Xóa".
+     + Xác nhận xóa.
+     => Mong đợi: Phiếu nhập bị xóa. Quay lại trang Sách, số lượng tồn kho của Sách C phải giảm xuống còn 20 (hoàn tác).
+
+   - **Test lỗi không đủ tồn kho để hoàn tác:**
+     + Giả sử Sách D ban đầu nhập 50 cuốn, sau đó đã xuất đi 40 cuốn, tồn kho còn 10.
+     + Tìm lại phiếu nhập ban đầu (nhập 50 cuốn) và thử "Xóa".
+     => Mong đợi: Hộp thoại lỗi màu hồng hiện ra báo "Không thể hoàn tác: Số lượng tồn kho... nhỏ hơn số lượng đã nhập...".
+
+**3.4. Chức năng "Xóa Phiếu Xuất":**
+   - **Test thành công:**
+     + Ghi lại số lượng tồn kho của Sách E là 5.
+     + Tìm một phiếu xuất đã từng xuất Sách E với số lượng là 3.
+     + Mở chi tiết phiếu xuất đó và nhấn "Xóa".
+     + Xác nhận xóa.
+     => Mong đợi: Phiếu xuất bị xóa. Quay lại trang Sách, số lượng tồn kho của Sách E phải tăng lên 8 (hoàn tác).
+
+**3.5. Chức năng "Sửa Phiếu Nhập/Xuất":**
+   - Mở chi tiết một phiếu, nhấn "Sửa".
+   - Thay đổi các thông tin chung (Ngày, Nhân viên, Nguồn).
+   - Thay đổi các dòng chi tiết (thêm/xóa sách, sửa số lượng/đơn giá).
+   - Nhấn "Lưu".
+   => Mong đợi: Phiếu được cập nhật. Quan trọng nhất: Số lượng tồn kho của các sách liên quan phải được điều chỉnh chính xác theo sự thay đổi.
+
+==================================================================
+
+Cảm ơn bạn rất nhiều!

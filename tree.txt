@@ -1,0 +1,140 @@
+Folder PATH listing
+Volume serial number is 6AED-1E33
+C:.
+|   checkcolor.py
+|   ghi ch�.txt
+|   main.py
+|   MainFrame.py
+|   tempCodeRunnerFile.py
+|   test.py
+|   testversion.py
+|   tree.txt
+|   
++---.github
+|       copilot-instructions.md
+|       
++---.vscode
+|       settings.json
+|       
++---config
+|   |   basedao.py
+|   |   basemodel.py
+|   |   baseservice.py
+|   |   db_connection.py
+|   |   validator.py
+|   |   
+|   \---__pycache__
+|           basedao.cpython-313.pyc
+|           basemodel.cpython-313.pyc
+|           db_connection.cpython-313.pyc
+|           validator.cpython-313.pyc
+|           
++---data
+|       bookwarehousemanagement.sql
+|       
++---source
+|   +---dao
+|   |   |   ChiTietPhieuNhapDAO.py
+|   |   |   ChiTietPhieuXuatDAO.py
+|   |   |   NguonNhapSachDAO.py
+|   |   |   NhanVienDAO.py
+|   |   |   NhaPhanPhoiDAO.py
+|   |   |   PhieuNhapSachDAO.py
+|   |   |   PhieuXuatSachDAO.py
+|   |   |   SachDAO.py
+|   |   |   
+|   |   \---__pycache__
+|   |           SachDAO.cpython-313.pyc
+|   |           
+|   +---models
+|   |   |   ChiTietPhieuNhap.py
+|   |   |   ChiTietPhieuXuat.py
+|   |   |   NguonNhapSach.py
+|   |   |   NhanVien.py
+|   |   |   NhaPhanPhoi.py
+|   |   |   PhieuNhapSach.py
+|   |   |   PhieuXuatSach.py
+|   |   |   Sach.py
+|   |   |   
+|   |   \---__pycache__
+|   |           Sach.cpython-313.pyc
+|   |           
+|   +---services
+|   |       ChiTietPhieuNhapService.py
+|   |       ChiTietPhieuXuatService.py
+|   |       NguonNhapSachService.py
+|   |       NhanVienService.py
+|   |       NhaPhanPhoiService.py
+|   |       PhieuNhapSachService.py
+|   |       PhieuXuatSachService.py
+|   |       SachService.py
+|   |       
+|   \---ui
+|       |   tree.txt
+|       |   
+|       +---pages
+|       |   |   base_page.py
+|       |   |   books_page.py
+|       |   |   contributors_page.py
+|       |   |   employees_page.py
+|       |   |   export_receipt_page.py
+|       |   |   home_page.py
+|       |   |   import_receipt_page.py
+|       |   |   suppliers_page.py
+|       |   |   
+|       |   \---__pycache__
+|       |           base_page.cpython-313.pyc
+|       |           books_page.cpython-313.pyc
+|       |           contributors_page.cpython-313.pyc
+|       |           employees_page.cpython-313.pyc
+|       |           export_receipt_page.cpython-313.pyc
+|       |           home_page.cpython-313.pyc
+|       |           import_receipt_page.cpython-313.pyc
+|       |           suppliers_page.cpython-313.pyc
+|       |           
+|       +---picture
+|       |       default_book.jpg
+|       |       lightpink.jpg
+|       |       pink.jpg
+|       |       pink1.jpg
+|       |       verylightpink.jpg
+|       |       
+|       +---sidebar
+|       |   |   sidebar_button_base.py
+|       |   |   sidebar_button_books.py
+|       |   |   sidebar_button_contributors.py
+|       |   |   sidebar_button_employees.py
+|       |   |   sidebar_button_export_receipt.py
+|       |   |   sidebar_button_home.py
+|       |   |   sidebar_button_import_receipt.py
+|       |   |   sidebar_button_suppliers.py
+|       |   |   
+|       |   \---__pycache__
+|       |           sidebar_button_base.cpython-313.pyc
+|       |           sidebar_button_books.cpython-313.pyc
+|       |           sidebar_button_contributors.cpython-313.pyc
+|       |           sidebar_button_employees.cpython-313.pyc
+|       |           sidebar_button_export_receipt.cpython-313.pyc
+|       |           sidebar_button_home.cpython-313.pyc
+|       |           sidebar_button_import_receipt.cpython-313.pyc
+|       |           sidebar_button_suppliers.cpython-313.pyc
+|       |           
+|       +---Table
+|       |   \---BooksTable
+|       |       |   books_card.py
+|       |       |   books_table.py
+|       |       |   
+|       |       \---__pycache__
+|       |               books_card.cpython-313.pyc
+|       |               books_table.cpython-313.pyc
+|       |               
+|       \---__pycache__
+|               sidebar_button_base.cpython-313.pyc
+|               
+\---util
+    |   decimal_util.py
+    |   get_absolute_path.py
+    |   
+    \---__pycache__
+            decimal_util.cpython-313.pyc
+            

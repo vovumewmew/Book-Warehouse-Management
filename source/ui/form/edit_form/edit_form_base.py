@@ -1,0 +1,177 @@
+# EditFormBase.py
+import flet as ft
+
+class EditFormBase(ft.Container):
+    def __init__(self, title="Chỉnh sửa", on_submit=None, on_close=None):
+        super().__init__()
+        self.title = title
+        self.on_submit = on_submit
+        self.on_close = on_close
+        self.page = None
+        self.image_file = None
+
+        # Màu mặc định
+        self.default_field_bgcolor = "#FFFFFF"
+        self.default_field_color = ft.Colors.BLACK
+        self.default_border_color = "#A94F8B"
+        self.default_focused_border_color = "#FF69B4"
+
+        # Danh sách field
+        self.fields = []
+        self.fields_column = ft.Column(self.fields, spacing=10, scroll=ft.ScrollMode.AUTO, expand=True)
+
+        # File picker + preview hình
+        self.image_picker = ft.FilePicker(on_result=self._on_file_picked)
+        self.image_preview = ft.Container(
+            width=120,
+            height=120,
+            bgcolor="#f0f0f0",
+            border_radius=10,
+            content=ft.Icon(ft.Icons.IMAGE, size=60, color="gray"),
+        )
+
+        # Nút hành động
+        self.submit_button = ft.ElevatedButton(
+            "Lưu",
+            bgcolor="#A94F8B",
+            color=ft.Colors.WHITE,
+            width=100,
+            height=40,
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+            on_click=self._handle_submit,
+        )
+        self.close_button = ft.ElevatedButton(
+            "Đóng",
+            bgcolor="#A94F8B",
+            color=ft.Colors.WHITE,
+            width=100,
+            height=40,
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+            on_click=self._handle_close,
+        )
+
+        # Container chính của form
+        self.form_container = ft.Container(
+            bgcolor="#FFF8FB",
+            padding=20,
+            border_radius=ft.border_radius.all(16),
+            border=ft.border.all(2, "#E5C4EC"),
+            width=500,
+            content=ft.Column(
+                [
+                    ft.Text(
+                        self.title,
+                        size=20,
+                        weight=ft.FontWeight.BOLD,
+                        color="#A94F8B",
+                        text_align=ft.TextAlign.CENTER,
+                    ),
+                    ft.Divider(height=20, color="#A94F8B"),
+                    ft.Row(
+                        [
+                            ft.Container(
+                                on_click=lambda e: self.image_picker.pick_files(
+                                    allow_multiple=False,
+                                    file_type=ft.FilePickerFileType.IMAGE,
+                                ),
+                                content=self.image_preview,
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                    self.fields_column,
+                    ft.Row(
+                        [self.submit_button, self.close_button],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=15,
+                    ),
+                ],
+                scroll=ft.ScrollMode.AUTO,
+                spacing=15,
+            ),
+        )
+
+        # Overlay chính
+        self.overlay = ft.Container(
+            bgcolor=ft.Colors.TRANSPARENT,
+            expand=True,
+            content=ft.Row(
+                [ft.Container(expand=True), self.form_container, ft.Container(expand=True)],
+                alignment=ft.MainAxisAlignment.CENTER,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+        )
+
+        # Container chính sẽ hiển thị overlay
+        self.content = self.overlay
+
+    # Xử lý chọn file
+    def _on_file_picked(self, e):
+        if e.files:
+            self.image_file = e.files[0].path
+            self.image_preview.content = ft.Image(
+                src=self.image_file, width=120, height=120, fit=ft.ImageFit.COVER
+            )
+            self.image_preview.update()
+
+    def _handle_submit(self, e):
+        data = {field.label: field.value for field in self.fields}
+        if self.on_submit:
+            self.on_submit(e, data)
+    # self.close()  # Xóa dòng này
+
+
+    def _handle_close(self, e):
+        if self.on_close:
+            self.on_close(e)
+        self.close()
+
+    # Mở form
+    def open_form(self, page: ft.Page):
+        self.page = page
+        if self not in page.overlay:
+            page.overlay.append(self)
+        if self.image_picker not in page.overlay:
+            page.overlay.append(self.image_picker)
+        page.update()
+
+    # Đóng form
+    def close(self):
+        if self.page:
+            if self in self.page.overlay:
+                self.page.overlay.remove(self)
+            if self.image_picker in self.page.overlay:
+                self.page.overlay.remove(self.image_picker)
+            self.page.update()
+
+    # Thêm field (có thể prefill value, hỗ trợ read_only)
+    def add_field(
+        self,
+        label_text: str,
+        value: str = "",
+        prefix_text: str = "",
+        hint_text: str = "",
+        read_only: bool = False
+    ):
+        field = ft.TextField(
+            label=label_text,
+            value=value,
+            prefix_text=prefix_text,
+            hint_text=hint_text,
+            border_color=self.default_border_color,
+            focused_border_color=self.default_focused_border_color,
+            bgcolor=self.default_field_bgcolor,
+            color=self.default_field_color,
+            border_radius=12,
+            content_padding=ft.padding.all(12),
+            text_size=14,
+            cursor_color="#A94F8B",
+            cursor_width=2,
+            width=450,
+            read_only=read_only,  # <-- tích hợp readonly
+        )
+        self.fields.append(field)
+        self.fields_column.controls.append(field)
+        if self.fields_column.page:
+            self.fields_column.update()
+        return field

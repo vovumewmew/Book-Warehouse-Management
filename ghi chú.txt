@@ -1,0 +1,4 @@
+việc hôm nay:
+
+- sửa lại nút "Lưu" để hoàn thành logic "Sửa"
+- Xóa phiếu nhập/xuất
