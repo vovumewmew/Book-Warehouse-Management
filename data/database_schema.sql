@@ -4,6 +4,14 @@ CREATE DATABASE IF NOT EXISTS `bookwarehousemanagement` CHARACTER SET utf8mb4 CO
 -- Sử dụng cơ sở dữ liệu vừa tạo
 USE `bookwarehousemanagement`;
 
+DROP TABLE IF EXISTS chitietphieuxuat;
+DROP TABLE IF EXISTS phieuxuatsach;
+DROP TABLE IF EXISTS chitietphieunhap;
+DROP TABLE IF EXISTS phieunhapsach;
+DROP TABLE IF EXISTS nhaphanphoi;
+DROP TABLE IF EXISTS nguonnhapsach;
+DROP TABLE IF EXISTS nhanvien;
+DROP TABLE IF EXISTS sach;
 --
 -- Cấu trúc bảng cho `sach`
 --
