@@ -5,6 +5,7 @@ from source.ui.button.delete_button.delete_employee_button import DeleteEmployee
 from source.services.NhanVienService import NhanVienService
 from source.dao.NhanVienDAO import NhanVienDAO
 from config.db_connection import DatabaseConnection
+from util.dialog_utils import show_success_dialog, show_error_dialog
 
 
 class EmployeeForm(DisplayFormBase): 
@@ -54,11 +55,7 @@ class EmployeeForm(DisplayFormBase):
             action_buttons.extend([restore_button, delete_permanently_button])
         else: # mode == "available"
             edit_button = EditEmployeeButton(nhanvien=self._nhanvien, nhanvien_service=self.nhanvien_service, page=self.page)
-            delete_and_close = lambda e: (
-                self.nhanvien_service.delete(self._nhanvien.ID_NhanVien),
-                super(EmployeeForm, self)._handle_close(e)
-            )
-            delete_button = DeleteEmployeeButton(page=self.page, on_delete=delete_and_close)
+            delete_button = DeleteEmployeeButton(page=self.page, on_delete=self._handle_delete)
             action_buttons.extend([edit_button, delete_button])
 
         action_buttons.append(close_button)
@@ -75,11 +72,31 @@ class EmployeeForm(DisplayFormBase):
     def _handle_close(self, e):
         super()._handle_close(e)
 
+    def _handle_delete(self, e):
+        """Xử lý sự kiện xóa, hiển thị dialog thành công và đóng form."""
+        success = self.nhanvien_service.delete(self._nhanvien.ID_NhanVien)
+        if success:
+            show_success_dialog(
+                self.page,
+                "Thành công",
+                f"Đã xóa nhân viên '{self._nhanvien.HoTen}' thành công. Nhân viên đã được chuyển vào thùng rác.",
+                on_close=lambda: super(EmployeeForm, self)._handle_close(e)
+            )
+        else:
+            show_error_dialog(self.page, "Lỗi", "Không thể xóa nhân viên. Vui lòng thử lại.")
+
     def restore_action(self, e):
         def do_restore():
-            self.nhanvien_service.restore([self._nhanvien.ID_NhanVien])
-            self.show_snackbar(f"Đã phục hồi nhân viên '{self._nhanvien.HoTen}'.")
-            super(EmployeeForm, self)._handle_close(e)
+            success = self.nhanvien_service.restore([self._nhanvien.ID_NhanVien])
+            if success:
+                show_success_dialog(
+                    self.page,
+                    "Thành công",
+                    f"Đã phục hồi nhân viên '{self._nhanvien.HoTen}' thành công. Nhân viên đã được chuyển về danh sách chính.",
+                    on_close=lambda: super(EmployeeForm, self)._handle_close(e)
+                )
+            else:
+                show_error_dialog(self.page, "Lỗi", "Không thể phục hồi nhân viên. Vui lòng thử lại.")
 
         self._show_confirmation(
             title="Xác nhận phục hồi",

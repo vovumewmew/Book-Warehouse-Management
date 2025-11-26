@@ -14,6 +14,7 @@ from source.services.SachService import SachService
 from source.services.PhieuXuatSachService import PhieuXuatSachService
 from source.services.ChiTietPhieuXuatService import ChiTietPhieuXuatService
 from source.models.PhieuXuatSach import PhieuXuatSach
+from util.dialog_utils import show_success_dialog
 
 class EditExportReceiptForm(ft.Container):
     def __init__(self, page: ft.Page, receipt_data, on_close=None):
@@ -139,8 +140,10 @@ class EditExportReceiptForm(ft.Container):
             update_result = self.phieuxuat_service.update(phieu_xuat_update)
             
             if update_result:
-                self._show_snackbar("Cập nhật phiếu xuất thành công!")
-                self._handle_close(e)
+                show_success_dialog(
+                    self.page, "Thành công", f"Đã cập nhật phiếu xuất '{phieu_xuat_update.ID_PhieuXuat}' thành công!",
+                    on_close=lambda: self._handle_close(e)
+                )
             else:
                 self._show_error("Cập nhật phiếu xuất thất bại. Không có thay đổi nào được ghi nhận.")
 

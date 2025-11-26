@@ -2,6 +2,7 @@ import flet as ft
 from source.ui.form.edit_form.edit_form_base import EditFormBase
 from source.models.NguonNhapSach import NguonNhapSach
 from source.services.NguonNhapSachService import NguonNhapSachService
+from util.dialog_utils import show_success_dialog
 from util.get_absolute_path import get_absolute_path
 
 
@@ -85,9 +86,10 @@ class EditSupplierForm(EditFormBase):
             # --- Update DB ---
             result = self.supplier_service.update(supplier)
             if result:
-                if self.on_success:
-                    self.on_success(supplier)
-                self.close()
+                show_success_dialog(
+                    self.page, "Thành công", f"Đã cập nhật nhà cung cấp '{supplier.TenCoSo}' thành công!",
+                    on_close=self.close
+                )
             else:
                 return self._show_error("Không thể cập nhật nhà cung cấp. Kiểm tra dữ liệu hoặc DB.", self.name_field)
 

@@ -39,3 +39,36 @@ def show_error_dialog(page: ft.Page, title: str, message: str, on_close=None):
 
     page.overlay.append(error_dialog)
     page.update()
+
+def show_success_dialog(page: ft.Page, title: str, message: str, on_close=None):
+    """
+    Hiển thị một hộp thoại thành công tùy chỉnh, có thể đóng được.
+    """
+    success_dialog = None
+
+    def close_dialog(e=None):
+        if page and page.overlay and success_dialog in page.overlay:
+            page.overlay.remove(success_dialog)
+            page.update()
+        if on_close:
+            on_close()
+
+    dialog_content = ft.Container(
+        width=400,
+        padding=20,
+        bgcolor="#FCE4EC",  # Màu nền thành công
+        border_radius=18,
+        content=ft.Column([
+            ft.Text(title, size=18, weight="bold", color="#880E4F"),
+            ft.Text(message, size=14, color="#880E4F", max_lines=3, overflow=ft.TextOverflow.ELLIPSIS, text_align=ft.TextAlign.CENTER),
+            ft.Row([ft.ElevatedButton("Đóng", bgcolor="#A94F8B", color="white", on_click=close_dialog)], alignment=ft.MainAxisAlignment.END)
+        ], spacing=15, tight=True)
+    )
+
+    success_dialog = ft.Container(
+        expand=True, bgcolor=ft.Colors.with_opacity(0.4, ft.Colors.BLACK),
+        alignment=ft.alignment.center, content=dialog_content
+    )
+
+    page.overlay.append(success_dialog)
+    page.update()

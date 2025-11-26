@@ -14,6 +14,7 @@ from source.services.SachService import SachService
 from source.services.PhieuNhapSachService import PhieuNhapSachService
 from source.services.ChiTietPhieuNhapService import ChiTietPhieuNhapService
 from source.models.PhieuNhapSach import PhieuNhapSach
+from util.dialog_utils import show_success_dialog
 
 class EditImportReceiptForm(ft.Container):
     def __init__(self, page: ft.Page, receipt_data, on_close=None):
@@ -178,8 +179,10 @@ class EditImportReceiptForm(ft.Container):
             update_result = self.phieunhap_service.update(phieu_nhap_update)
             
             if update_result:
-                self._show_snackbar("Cập nhật phiếu nhập thành công!")
-                self._handle_close(e)
+                show_success_dialog(
+                    self.page, "Thành công", f"Đã cập nhật phiếu nhập '{phieu_nhap_update.ID_PhieuNhap}' thành công!",
+                    on_close=lambda: self._handle_close(e)
+                )
             else:
                 self._show_error("Cập nhật phiếu nhập thất bại. Không có thay đổi nào được ghi nhận.")
 

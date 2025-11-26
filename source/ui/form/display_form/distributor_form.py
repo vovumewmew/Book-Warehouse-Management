@@ -5,6 +5,7 @@ from source.ui.button.delete_button.delete_distributor_button import DeleteDistr
 from source.services.NhaPhanPhoiService import NhaPhanPhoiService
 from source.dao.NhaPhanPhoiDAO import NhaPhanPhoiDAO
 from config.db_connection import DatabaseConnection
+from util.dialog_utils import show_success_dialog, show_error_dialog
 
 class DistributorForm(DisplayFormBase):
     def __init__(self, npp, page: ft.Page = None, on_close=None, mode="available", **kwargs):
@@ -52,11 +53,7 @@ class DistributorForm(DisplayFormBase):
             action_buttons.extend([restore_button, delete_permanently_button])
         else: # mode == "available"
             edit_button = EditDistributorButton(distributor=self._npp, npp_service=self.npp_service, page=self.page)
-            delete_and_close = lambda e: (
-                self.npp_service.delete(self._npp.ID_NguonXuat),
-                super(DistributorForm, self)._handle_close(e)
-            )
-            delete_button = DeleteDistributorButton(page=self.page, on_delete=delete_and_close)
+            delete_button = DeleteDistributorButton(page=self.page, on_delete=self._handle_delete)
             action_buttons.extend([edit_button, delete_button])
 
         action_buttons.append(close_button)
@@ -73,11 +70,31 @@ class DistributorForm(DisplayFormBase):
     def _handle_close(self, e):
         super()._handle_close(e)
 
+    def _handle_delete(self, e):
+        """Xử lý sự kiện xóa, hiển thị dialog thành công và đóng form."""
+        success = self.npp_service.delete(self._npp.ID_NguonXuat)
+        if success:
+            show_success_dialog(
+                self.page,
+                "Thành công",
+                f"Đã xóa nhà phân phối '{self._npp.TenCoSo}' thành công. Nhà phân phối đã được chuyển vào thùng rác.",
+                on_close=lambda: super(DistributorForm, self)._handle_close(e)
+            )
+        else:
+            show_error_dialog(self.page, "Lỗi", "Không thể xóa nhà phân phối. Vui lòng thử lại.")
+
     def restore_action(self, e):
         def do_restore():
-            self.npp_service.restore([self._npp.ID_NguonXuat])
-            self.show_snackbar(f"Đã phục hồi nhà phân phối '{self._npp.TenCoSo}'.")
-            super(DistributorForm, self)._handle_close(e)
+            success = self.npp_service.restore([self._npp.ID_NguonXuat])
+            if success:
+                show_success_dialog(
+                    self.page,
+                    "Thành công",
+                    f"Đã phục hồi nhà phân phối '{self._npp.TenCoSo}' thành công. Nhà phân phối đã được chuyển về danh sách chính.",
+                    on_close=lambda: super(DistributorForm, self)._handle_close(e)
+                )
+            else:
+                show_error_dialog(self.page, "Lỗi", "Không thể phục hồi nhà phân phối. Vui lòng thử lại.")
 
         self._show_confirmation(
             title="Xác nhận phục hồi",

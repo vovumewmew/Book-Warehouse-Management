@@ -3,6 +3,7 @@ from decimal import Decimal
 from .edit_form_base import EditFormBase
 from source.models.NhanVien import NhanVien
 from source.services.NhanVienService import NhanVienService
+from util.dialog_utils import show_success_dialog, show_error_dialog
 from util.get_absolute_path import get_absolute_path
 
 
@@ -138,11 +139,12 @@ class EditEmployeeForm(EditFormBase):
 
             result = self.nhanvien_service.update(updated_nv)
             if result:
-                if self.on_success:
-                    self.on_success(updated_nv)
-                self.close()
+                show_success_dialog(
+                    self.page, "Thành công", f"Đã cập nhật nhân viên '{updated_nv.HoTen}' thành công!",
+                    on_close=self.close
+                )
             else:
-                self._show_error("Không thể cập nhật thông tin nhân viên. Kiểm tra dữ liệu hoặc DB")
+                show_error_dialog(self.page, "Lỗi", "Không thể cập nhật thông tin nhân viên. Kiểm tra dữ liệu hoặc DB")
 
         except ValueError as ve:
             msg = str(ve)
@@ -156,4 +158,4 @@ class EditEmployeeForm(EditFormBase):
             self._show_error(msg, field)
 
         except Exception as ex:
-            self._show_error(f"Lỗi không xác định: {ex}")
+            show_error_dialog(self.page, "Lỗi không xác định", str(ex))

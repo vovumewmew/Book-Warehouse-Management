@@ -5,7 +5,7 @@ from source.services.NguonNhapSachService import NguonNhapSachService
 from source.dao.NguonNhapSachDAO import NguonNhapSachDAO
 from config.db_connection import DatabaseConnection
 from util.get_absolute_path import get_absolute_path
-from util.dialog_utils import show_error_dialog
+from util.dialog_utils import show_error_dialog, show_success_dialog
 
 class AddSupplierForm(AddFormBase):
     def __init__(self, on_submit=None, on_close=None, on_success=None):
@@ -113,7 +113,11 @@ class AddSupplierForm(AddFormBase):
             )
 
             self.ncc_service.create(ncc)
-            self._close_and_reload(ncc) # ✅ Đóng form và reload nếu create() không ném lỗi
+            
+            show_success_dialog(
+                self.page, "Thành công", f"Đã thêm nhà cung cấp '{ncc.TenCoSo}' thành công!",
+                on_close=lambda: self._close_and_reload(ncc)
+            )
 
         except ValueError as ve:
             # Map lỗi model xuống field

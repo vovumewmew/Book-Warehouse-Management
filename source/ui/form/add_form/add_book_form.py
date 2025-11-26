@@ -5,8 +5,8 @@ from source.models.Sach import Sach
 from source.services.SachService import SachService
 from source.dao.SachDAO import SachDAO
 from config.db_connection import DatabaseConnection
-from util.get_absolute_path import get_absolute_path
-from util.dialog_utils import show_error_dialog
+from util.get_absolute_path import get_absolute_path 
+from util.dialog_utils import show_error_dialog, show_success_dialog
  
 class AddBookForm(AddFormBase): 
     def __init__(self, on_submit=None, on_close=None, on_success=None):
@@ -149,7 +149,12 @@ class AddBookForm(AddFormBase):
 
             # --- Thêm sách vào DB ---
             self.sach_service.create(sach)
-            self._close_and_reload(sach) # ✅ Đóng form và reload nếu create() không ném lỗi
+            
+            # Hiển thị thông báo thành công, sau khi đóng thông báo sẽ reload trang
+            show_success_dialog(
+                self.page, "Thành công", f"Đã thêm sách '{sach.TenSach}' thành công!",
+                on_close=lambda: self._close_and_reload(sach)
+            )
 
         except ValueError as ve:
             # Map lỗi từ model xuống field

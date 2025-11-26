@@ -6,6 +6,7 @@ from source.ui.button.delete_button.delete_book_button import DeleteBookButton
 from source.services.SachService import SachService
 from source.dao.SachDAO import SachDAO
 from config.db_connection import DatabaseConnection
+from util.dialog_utils import show_success_dialog, show_error_dialog
 
 class BookForm(DisplayFormBase):
     def __init__(self, sach, page=None, on_close=None, mode="available", **kwargs):
@@ -26,6 +27,7 @@ class BookForm(DisplayFormBase):
             "Thể loại": "TheLoai",
             "Năm xuất bản": "NamXuatBan",
             "Nhà xuất bản": "NhaXuatBan",
+            "Ngôn ngữ": "NgonNgu",
             "Số lượng": "SoLuong",
             "Giá": "Gia",
         }
@@ -65,12 +67,7 @@ class BookForm(DisplayFormBase):
             action_buttons.extend([restore_button, delete_permanently_button])
         else: # mode == "available"
             edit_button = EditBookButton(book=self._sach, sach_service=self.sach_service, page=self.page)
-            # Tạo hàm lambda để xóa và đóng form
-            delete_and_close = lambda e: (
-                self.sach_service.delete(self._sach.ID_Sach),
-                super(BookForm, self)._handle_close(e)
-            )
-            delete_button = DeleteBookButton(page=self.page, on_delete=delete_and_close)
+            delete_button = DeleteBookButton(page=self.page, on_delete=self._handle_delete)
             action_buttons.extend([edit_button, delete_button])
 
         # Thêm nút "Đóng" vào cuối danh sách
@@ -84,11 +81,32 @@ class BookForm(DisplayFormBase):
     def _handle_close(self, e):
         super()._handle_close(e)
 
+    def _handle_delete(self, e):
+        """Xử lý sự kiện xóa, hiển thị dialog thành công và đóng form."""
+        success = self.sach_service.delete(self._sach.ID_Sach)
+        if success:
+            show_success_dialog(
+                self.page,
+                "Thành công",
+                f"Đã xóa sách '{self._sach.TenSach}' thành công. Sách đã được chuyển vào thùng rác.",
+                on_close=lambda: super(BookForm, self)._handle_close(e) # Đóng form sau khi dialog đóng
+            )
+        else:
+            show_error_dialog(self.page, "Lỗi", "Không thể xóa sách. Vui lòng thử lại.")
+
+
     def restore_action(self, e):
         def do_restore():
-            self.sach_service.restore_books([self._sach.ID_Sach])
-            self.show_snackbar(f"Đã phục hồi sách '{self._sach.TenSach}'.")
-            super(BookForm, self)._handle_close(e) # Gọi hàm đóng của lớp cha
+            success = self.sach_service.restore_books([self._sach.ID_Sach])
+            if success:
+                show_success_dialog(
+                    self.page,
+                    "Thành công",
+                    f"Đã phục hồi sách '{self._sach.TenSach}' thành công. Sách đã được chuyển về danh sách chính.",
+                    on_close=lambda: super(BookForm, self)._handle_close(e)
+                )
+            else:
+                show_error_dialog(self.page, "Lỗi", "Không thể phục hồi sách. Vui lòng thử lại.")
 
         self._show_confirmation(
             title="Xác nhận phục hồi",

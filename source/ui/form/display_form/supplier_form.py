@@ -5,6 +5,7 @@ from source.ui.button.delete_button.delete_supplier_button import DeleteSupplier
 from source.services.NguonNhapSachService import NguonNhapSachService
 from source.dao.NguonNhapSachDAO import NguonNhapSachDAO
 from config.db_connection import DatabaseConnection
+from util.dialog_utils import show_success_dialog, show_error_dialog
 
 class SupplierForm(DisplayFormBase):
     def __init__(self, supplier, page=None, on_close=None, mode="available", **kwargs):
@@ -57,11 +58,7 @@ class SupplierForm(DisplayFormBase):
             action_buttons.extend([restore_button, delete_permanently_button])
         else: # mode == "available"
             edit_button = EditSupplierButton(supplier=self._supplier, supplier_service=self.supplier_service, page=self.page)
-            delete_and_close = lambda e: (
-                self.supplier_service.delete(self._supplier.ID_NguonNhap),
-                super(SupplierForm, self)._handle_close(e)
-            )
-            delete_button = DeleteSupplierButton(page=self.page, on_delete=delete_and_close)
+            delete_button = DeleteSupplierButton(page=self.page, on_delete=self._handle_delete)
             action_buttons.extend([edit_button, delete_button])
 
         action_buttons.append(close_button)
@@ -78,11 +75,31 @@ class SupplierForm(DisplayFormBase):
     def _handle_close(self, e):
         super()._handle_close(e)
 
+    def _handle_delete(self, e):
+        """Xử lý sự kiện xóa, hiển thị dialog thành công và đóng form."""
+        success = self.supplier_service.delete(self._supplier.ID_NguonNhap)
+        if success:
+            show_success_dialog(
+                self.page,
+                "Thành công",
+                f"Đã xóa nhà cung cấp '{self._supplier.TenCoSo}' thành công. Nhà cung cấp đã được chuyển vào thùng rác.",
+                on_close=lambda: super(SupplierForm, self)._handle_close(e)
+            )
+        else:
+            show_error_dialog(self.page, "Lỗi", "Không thể xóa nhà cung cấp. Vui lòng thử lại.")
+
     def restore_action(self, e):
         def do_restore():
-            self.supplier_service.restore([self._supplier.ID_NguonNhap])
-            self.show_snackbar(f"Đã phục hồi nhà cung cấp '{self._supplier.TenCoSo}'.")
-            super(SupplierForm, self)._handle_close(e)
+            success = self.supplier_service.restore([self._supplier.ID_NguonNhap])
+            if success:
+                show_success_dialog(
+                    self.page,
+                    "Thành công",
+                    f"Đã phục hồi nhà cung cấp '{self._supplier.TenCoSo}' thành công. Nhà cung cấp đã được chuyển về danh sách chính.",
+                    on_close=lambda: super(SupplierForm, self)._handle_close(e)
+                )
+            else:
+                show_error_dialog(self.page, "Lỗi", "Không thể phục hồi nhà cung cấp. Vui lòng thử lại.")
 
         self._show_confirmation(
             title="Xác nhận phục hồi",

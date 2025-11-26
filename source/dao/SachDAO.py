@@ -30,6 +30,20 @@ class SachDAO(BaseDAO):
         finally:
             if cursor:
                 cursor.close()
+
+    def count_out_of_stock_books(self) -> int:
+        cursor = None
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM sach WHERE SoLuong = 0 AND TinhKhaDung = 'Khả dụng'")
+            result = cursor.fetchone()
+            return result[0] if result and result[0] else 0
+        except Error as e:
+            logging.error(f"Lỗi khi đếm sách đã hết hàng: {e}")
+            return 0
+        finally:
+            if cursor:
+                cursor.close()
         
     def get_unavailable(self) -> List[Sach]:
         cursor = None
@@ -202,7 +216,7 @@ class SachDAO(BaseDAO):
         cursor = None
         try:
             cursor = self.conn.cursor(dictionary=True)
-            cursor.execute("select * from sach where SoLuong <= %s and TinhKhaDung = 'Khả dụng'", (soluong,))
+            cursor.execute("select * from sach where SoLuong <= %s and SoLuong > 0 and TinhKhaDung = 'Khả dụng'", (soluong,))
             rows = cursor.fetchall()
             return [Sach.from_dict(row) for row in rows]
         except Error as e:
@@ -216,7 +230,9 @@ class SachDAO(BaseDAO):
         cursor = None
         try:
             cursor = self.conn.cursor()
-            cursor.execute("UPDATE sach SET SoLuong = %s WHERE ID_Sach = %s", (so_luong_moi, ma_sach))
+            # Logic mới: Tự động cập nhật trạng thái dựa trên số lượng
+            trang_thai_moi = 'Còn hàng' if so_luong_moi > 0 else 'Hết hàng'
+            cursor.execute("UPDATE sach SET SoLuong = %s, TrangThai = %s WHERE ID_Sach = %s", (so_luong_moi, trang_thai_moi, ma_sach))
             self.conn.commit()
             return cursor.rowcount > 0
         except Error as e:

@@ -10,6 +10,7 @@ from source.services.SachService import SachService
 from source.ui.form.display_form.import_receipt_form import ImportReceiptForm
 from source.ui.button.add_button.add_new_import_receipt import AddNewImportReceipt
 from source.ui.search_bar.search_bar_import_receipt import SearchBarImportReceipt
+from util.dialog_utils import show_success_dialog
 
 class ImportReceiptPage(BasePage):
     def __init__(self, page: ft.Page, change_page_func, **kwargs):
@@ -153,8 +154,11 @@ class ImportReceiptPage(BasePage):
 
     def show_receipt_details(self, receipt):
         """Hiển thị form chi tiết phiếu nhập."""
-        def on_form_close():
+        def on_form_close(success_message: str = None):
             self.load_receipts() # Tải lại dữ liệu khi form đóng
+            if success_message:
+                show_success_dialog(self.page, "Thành công", success_message)
+
 
         receipt_form = ImportReceiptForm(receipt, page=self.page, on_close=on_form_close)
         

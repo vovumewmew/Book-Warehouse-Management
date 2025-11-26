@@ -10,6 +10,7 @@ class CardBase(ft.Container):
         subtitle: str = "",
         image_path: str = None,
         extra_info: str = "",
+        extra_info_color: str = "#A94F8B",  # Thêm màu cho extra_info
         page=None,
         form_data=None,
         width: int = 220,
@@ -24,6 +25,7 @@ class CardBase(ft.Container):
         self.subtitle = subtitle
         self.image_path = image_path
         self.extra_info = extra_info
+        self.extra_info_color = extra_info_color # Lưu lại màu
         self.width = width
         self.height = height
         self.card_bgcolor = card_bgcolor
@@ -89,7 +91,7 @@ class CardBase(ft.Container):
                 ft.Text(
                     self.extra_info,
                     size=13,
-                    color="#A94F8B",
+                    color=self.extra_info_color, # Sử dụng màu tùy chỉnh
                     text_align=ft.TextAlign.CENTER,
                 ) if self.extra_info else ft.Container(),
             ],

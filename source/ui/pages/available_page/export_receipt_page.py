@@ -10,6 +10,7 @@ from source.services.SachService import SachService
 from source.ui.form.display_form.export_receipt_form import ExportReceiptForm
 from source.ui.button.add_button.add_new_export_receipt import AddNewExportReceipt
 from source.ui.search_bar.search_bar_export_receipt import SearchBarExportReceipt
+from util.dialog_utils import show_success_dialog
 
 class ExportReceiptPage(BasePage):
     def __init__(self, page: ft.Page, change_page_func, **kwargs):
@@ -153,8 +154,10 @@ class ExportReceiptPage(BasePage):
 
     def show_receipt_details(self, receipt):
         """Hiển thị form chi tiết phiếu xuất."""
-        def on_form_close():
+        def on_form_close(success_message: str = None):
             self.load_receipts() # Tải lại dữ liệu khi form đóng
+            if success_message:
+                show_success_dialog(self.page, "Thành công", success_message)
 
         receipt_form = ExportReceiptForm(receipt, page=self.page, on_close=on_form_close)
         self.page.overlay.append(receipt_form)

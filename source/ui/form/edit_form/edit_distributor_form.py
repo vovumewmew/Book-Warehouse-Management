@@ -2,6 +2,7 @@ import flet as ft
 from source.ui.form.edit_form.edit_form_base import EditFormBase
 from source.models.NhaPhanPhoi import NhaPhanPhoi
 from source.services.NhaPhanPhoiService import NhaPhanPhoiService
+from util.dialog_utils import show_success_dialog
 from util.get_absolute_path import get_absolute_path
 
 
@@ -83,9 +84,10 @@ class EditDistributorForm(EditFormBase):
             # --- Cập nhật DB ---
             result = self.npp_service.update(npp)
             if result:
-                if self.on_success:
-                    self.on_success(npp)
-                self.close()
+                show_success_dialog(
+                    self.page, "Thành công", f"Đã cập nhật nhà phân phối '{npp.TenCoSo}' thành công!",
+                    on_close=self.close
+                )
             else:
                 return self._show_error("Không thể cập nhật nhà phân phối. Kiểm tra dữ liệu hoặc DB.", self.name_field)
 

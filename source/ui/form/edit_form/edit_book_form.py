@@ -4,6 +4,7 @@ import flet as ft
 from source.ui.form.edit_form.edit_form_base import EditFormBase
 from source.models.Sach import Sach
 from source.services.SachService import SachService
+from util.dialog_utils import show_success_dialog
 from util.get_absolute_path import get_absolute_path
 
 class EditBookForm(EditFormBase):
@@ -104,10 +105,12 @@ class EditBookForm(EditFormBase):
             )
 
             # --- Update DB ---
-            if self.sach_service.update(sach):
-                if self.on_success:
-                    self.on_success(sach)   # reload page ngoài form
-                self.close()                # chỉ đóng form khi update thành công
+            result = self.sach_service.update(sach)
+            if result:
+                show_success_dialog(
+                    self.page, "Thành công", f"Đã cập nhật sách '{sach.TenSach}' thành công!",
+                    on_close=self.close
+                )
             else:
                 return self._show_error("Không thể cập nhật sách. Kiểm tra dữ liệu hoặc DB.", self.name_field)
 

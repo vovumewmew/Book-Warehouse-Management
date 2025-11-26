@@ -6,7 +6,7 @@ from source.services.NhanVienService import NhanVienService
 from source.dao.NhanVienDAO import NhanVienDAO
 from config.db_connection import DatabaseConnection
 from util.get_absolute_path import get_absolute_path
-from util.dialog_utils import show_error_dialog
+from util.dialog_utils import show_error_dialog, show_success_dialog
 
 
 class AddEmployeeForm(AddFormBase):
@@ -166,7 +166,11 @@ class AddEmployeeForm(AddFormBase):
             )
 
             self.nhanvien_service.create(nhanvien)
-            self._close_and_reload(nhanvien) # ✅ Đóng form và reload nếu create() không ném lỗi
+            
+            show_success_dialog(
+                self.page, "Thành công", f"Đã thêm nhân viên '{nhanvien.HoTen}' thành công!",
+                on_close=lambda: self._close_and_reload(nhanvien)
+            )
 
         except ValueError as ve:
             msg = str(ve)

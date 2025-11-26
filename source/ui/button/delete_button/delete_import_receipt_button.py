@@ -29,9 +29,11 @@ class DeleteImportReceiptButton(ft.ElevatedButton):
         try:
             success = self.service.delete(self._receipt.ID_PhieuNhap)
             if success:
-                self._show_dialog("Thành công", f"Đã xóa thành công phiếu '{self._receipt.ID_PhieuNhap}'.")
-                if self.on_deleted:
-                    self.on_deleted() # Gọi callback để đóng form cha và tải lại bảng
+                # Thay vì gọi _show_dialog, gọi hàm on_deleted trực tiếp
+                # để đóng form chi tiết và reload bảng.
+                # Thông báo thành công sẽ hiển thị trên trang chính.
+                if self.on_deleted: 
+                    self.on_deleted(f"Đã xóa thành công phiếu '{self._receipt.ID_PhieuNhap}'.")
             else:
                 # Trường hợp service trả về False mà không ném Exception
                 self._show_dialog("Lỗi", "Xóa phiếu thất bại do một lỗi không xác định.", is_error=True)

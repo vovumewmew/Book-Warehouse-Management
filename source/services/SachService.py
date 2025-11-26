@@ -156,6 +156,13 @@ class SachService(BaseService):
             self.handle_error(e)
             return Decimal('0')
 
+    def count_out_of_stock_books(self) -> int:
+        try:
+            return self.dao.count_out_of_stock_books()
+        except Exception as e:
+            self.handle_error(e)
+            return 0
+
     def count_low_stock_books(self, threshold: int = 5) -> int:
         try:
             return self.dao.count_low_stock_books(threshold)

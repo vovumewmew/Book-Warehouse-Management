@@ -101,6 +101,9 @@ class BooksPage(BasePage):
             books = self.sach_service.get_low_stock_books()
             # Đặt lại bộ lọc để lần làm mới sau đó sẽ tải tất cả sách
             self.initial_filter = None
+        elif self.initial_filter == "out_of_stock":
+            books = [book for book in self.sach_service.get_all() if book.SoLuong == 0]
+            self.initial_filter = None
         else:
             books = self.sach_service.get_all()
 

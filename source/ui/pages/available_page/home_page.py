@@ -62,6 +62,7 @@ class HomePage(BasePage):
         total_books = self.sach_service.count_books()
         total_employees = self.nhanvien_service.get_total_employee()
         low_stock_count = self.sach_service.count_low_stock_books()
+        out_of_stock_count = self.sach_service.count_out_of_stock_books()
         total_stock_value = self.sach_service.get_total_stock_value()
         imports_this_month = self.phieunhap_service.count_current_month()
         exports_this_month = self.phieuxuat_service.count_current_month()
@@ -104,6 +105,15 @@ class HomePage(BasePage):
             color="#F4A261",
             on_click=lambda e: self.change_page(BooksPage, initial_filter="low_stock") if self.change_page else None
         )
+
+        card_out_of_stock = DashboardCard(
+            title="Sách đã hết hàng",
+            value=str(out_of_stock_count),
+            icon=ft.Icon(ft.Icons.BOOKMARK_REMOVE_ROUNDED, color=ft.Colors.WHITE, size=28),
+            color="#B53471", # Màu đỏ sẫm
+            on_click=lambda e: self.change_page(BooksPage, initial_filter="out_of_stock") if self.change_page else None
+        )
+
 
         card_total_value = DashboardCard(
             title="Tổng giá trị kho",
@@ -169,7 +179,7 @@ class HomePage(BasePage):
             [
                 ft.Text("TỔNG QUAN KHO SÁCH", size=18, weight=ft.FontWeight.BOLD, color="#A94F8B"),
                 ft.Row(
-                    [card_total_books, card_total_employees, card_low_stock, card_total_value, card_total_suppliers, card_total_distributors],
+                    [card_total_books, card_total_employees, card_low_stock, card_out_of_stock, card_total_value, card_total_suppliers, card_total_distributors],
                     spacing=20,
                     wrap=True, # Tự động xuống hàng nếu không đủ chỗ
                 ),
